@@ -92,18 +92,21 @@ public class Solution {
     public int getIterations(Spy s, Spy target) {
 
         int numberOfIterations = 0;
+        if (s == target) return numberOfIterations;
         Spy pointer = s, fastPointer = s;
 
         while (true) {
+
+            for (int i = 0; i < 2; i++){
+                if (fastPointer != null) fastPointer = fastPointer.immediateSupervisor;
+                if (fastPointer == pointer) return -1;
+            }
+
             pointer = pointer.immediateSupervisor;
             numberOfIterations++;
 
             if (pointer == target)
                 return numberOfIterations;
-
-            for (int i = 0; i < 2; i++) if (fastPointer != null) fastPointer = fastPointer.immediateSupervisor;
-
-            if (fastPointer == pointer) return -1;
         }
     }
 
