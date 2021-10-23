@@ -1,5 +1,6 @@
 package mcgill.ieeextreme.oasis.languageLearning;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Solution {
@@ -31,29 +32,39 @@ public class Solution {
     }
 
     public int computeTotalUniqueSentences() {
-        long[] dp = new long[this.N];
-        for (int i = 0; i < this.N; i++)
-            dp[i] = 1;
+        long[] dp = new long[this.N], preSum = new long[this.N];
+        HashMap<String, ArrayList<Integer>> wordPositionMap = new HashMap<>();
 
-        long sumTotal = 0;
+        for (int i = 0; i < this.N; i++) {
+            // Using the sum we have up till i - K - 1
+            // minus all counts of the same word appear before.
+            dp[i] = ((i >= K + 1 ? preSum[i - K - 1]: 0) + 1) % MOD;
+            if (wordPositionMap.containsKey(this.words[i]))
+                for (int position : wordPositionMap.get(this.words[i]))
+                    if (position <= i - K - 1)
+                        dp[i] = (dp[i] - dp[position]) % MOD;
+                    else
+                        break;
 
-        for (int i = 0; i < this.N; i++)
-            // Starting from i-K-1, going backwards.
-            for (int j = i - K - 1; j >= 0; j--)
-                if (!this.words[j].equals(this.words[i])) {
-                    dp[i] += dp[j];
-                    dp[i] %= Solution.MOD;
-                }
+            // Record the previous locations of each word.
+            if (wordPositionMap.containsKey(this.words[i]))
+                wordPositionMap.get(this.words[i]).add(i);
+            else {
+                ArrayList<Integer> newList = new ArrayList<>();
+                newList.add(i);
+                wordPositionMap.put(this.words[i], newList);
+            }
+            preSum[i] = (i == 0 ? dp[i] : preSum[i - 1] + dp[i]) % MOD;
+        }
+
 
         // Count the total number of unique words.
-        long sum = 0;
-        HashSet<String> visitedWords = new HashSet<>();
-        for (int i = this.N - 1; i >= 0; i--)
-            if (!visitedWords.contains(this.words[i])) {
-                sum += dp[i];
-                sum %= Solution.MOD;
-                visitedWords.add(this.words[i]);
-            }
-        return (int) sum % Solution.MOD;
+        long counts = 0;
+        for (String word : wordPositionMap.keySet()) {
+            ArrayList<Integer> wordPositions = wordPositionMap.get(word);
+            counts = (counts + dp[wordPositions.get(wordPositions.size() - 1)]) % MOD;
+        }
+
+        return (int)counts % MOD;
     }
 }
