@@ -6,6 +6,13 @@ import java.math.BigInteger;
 // import
 // Please name your class Main
 // package mcgill.ieeextreme.oasis.expressionEvaluation;
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+import java.math.BigInteger;
+// import
+// Please name your class Main
+// package mcgill.ieeextreme.oasis.expressionEvaluation;
 class Main{
     //    class TestCase{
 //        Stack<Integer> stack = new Stack<>();
@@ -70,9 +77,10 @@ class Main{
                     int k = tokens[i] - '0';
                     cur_val += k;
 
-                    digit.push(cur_val);
+
                     i++;
                 }
+                digit.push(cur_val);
                 i--;
             }
             else if (tokens[i] == ')') {
@@ -140,7 +148,10 @@ class Main{
         // result, return it
         int res = digit.pop();
 
-        // res = (res + 1000000007 ) %  1000000007;
+        if(res < 0)
+            res = (res + 1000000007 ) %  1000000007;
+        else
+            res %= 1000000007;
 
         System.out.println(res);
         return;
@@ -154,7 +165,7 @@ class Main{
             case '+':
                 return (a + b);
             case '-':
-//                System.out.println("a _ b _ op" +op + " " + a + " " + b);
+                // System.out.println("a _ b _ op" +op + " " + a + " " + b);
                 return a - b;
             case '*': {
                 // BigInteger bigA = new BigInteger(String.valueOf(a));
