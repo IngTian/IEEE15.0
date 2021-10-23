@@ -1,4 +1,4 @@
-package mcgill.ieeextreme.oasis.imageSimilarity;
+// package mcgill.ieeextreme.oasis.imageSimilarity;
 
 //<<<<<<< Updated upstream
 //=======
@@ -8,7 +8,7 @@ package mcgill.ieeextreme.oasis.imageSimilarity;
 import java.util.*;
 import java.io.*;
 
-public class Solution {
+class Main {
 
     public static final int[] POSSIBLE_ROTATES = {0, 1, 2, 3};
     public static final int[] POSSIBLE_FLIPS = {0, 1};
@@ -55,7 +55,7 @@ public class Solution {
 
     public static void main(String[] args) {
         // write your code here
-        Solution s = new Solution();
+        Main s = new Main();
         ArrayList<TestCase> testCases = s.readTestCases();
 
         for(TestCase testCase : testCases){
@@ -69,7 +69,7 @@ public class Solution {
             ArrayList<int[][]> images = new ArrayList<>();
             boolean a = images.addAll(container.p) && images.addAll(container.q);
             int max_ = 0;
-            System.out.println("image_size = "+ images.size());
+            // System.out.println("image_size = "+ images.size());
             for(int i = 0; i <images.size(); i++ ){
 //                System.out.println(Arrays.deepToString(images.get(i)));
 //                System.out.println("________________________");
@@ -148,7 +148,7 @@ public class Solution {
     }
 
 
-//        if (m1 >= m2 && n1 >= n2){
+    //        if (m1 >= m2 && n1 >= n2){
 ////            System.out.println("case 1");
 //            return calculate_max(mat2, m2, n2, mat1, m1, n1);
 //        }
