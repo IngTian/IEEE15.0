@@ -49,7 +49,7 @@ public class Solution {
         Scanner scanner = new Scanner(System.in);
 
         int numberOfTestCases = scanner.nextInt();
-        ArrayList<TestCase> result = new ArrayList<>(numberOfTestCases);
+        ArrayList<TestCase> result = new ArrayList<>();
 
         for (int testCaseIndex = 0; testCaseIndex < numberOfTestCases; testCaseIndex++) {
             TestCase c = new TestCase();
@@ -58,18 +58,18 @@ public class Solution {
             // Prepare the first board.
             int numberOfRows = scanner.nextInt(), numberOfColumns = scanner.nextInt();
             inputOne = new char[numberOfRows][numberOfColumns];
-            for(int row = 0; row < numberOfRows; row++) for(int column = 0; column < numberOfColumns; column++)
-                inputOne[row][column] = (char)scanner.nextByte();
+            for(int row = 0; row < numberOfRows; row++)
+                inputOne[row] = scanner.next().toCharArray();
 
             // Prepare the second board.
             numberOfRows = scanner.nextInt();
             numberOfColumns = scanner.nextInt();
             inputTwo = new char[numberOfRows][numberOfColumns];
-            for(int row = 0; row < numberOfRows; row++) for(int column = 0; column < numberOfColumns; column++)
-                inputTwo[row][column] = (char)scanner.nextByte();
+            for(int row = 0; row < numberOfRows; row++)
+                inputTwo[row] = scanner.next().toCharArray();
 
             c.setCase(inputOne, inputTwo);
-            result.set(testCaseIndex, c);
+            result.add(c);
         }
 
         return result;
