@@ -5,6 +5,9 @@ import java.io.*;
 
 public class Solution {
 
+    public static final int[] POSSIBLE_ROTATES = {0, 1, 2, 3};
+    public static final int[] POSSIBLE_FLIPS = {0, 1};
+
     class TestCase {
         int[][] boardA;
         int[][] boardB;
@@ -36,13 +39,36 @@ public class Solution {
 
     }
 
+    static class PossibleStateContainer {
+        ArrayList<int[][]> p, q;
+
+        public PossibleStateContainer() {
+            this.p = new ArrayList<>();
+            this.q = new ArrayList<>();
+        }
+    }
+
     public static void main(String[] args) {
         // write your code here
         Solution s = new Solution();
-        s.readTestCases();
+        int[][] fakeInput = {
+                {0, 1, 1},
+                {1, 0, 1},
+                {0, 0, 0},
+                {1, 1, 1}
+        };
+        PossibleStateContainer container = new PossibleStateContainer();
+        HashSet<String> containedNodes = new HashSet<>();
+        containedNodes.add(s.getStringRepresentationOfABoard(fakeInput));
+        s.searchPossibleStates(fakeInput, containedNodes, container);
         System.out.println("FFFFFF");
     }
 
+    /**
+     * Encode the board into a String.
+     * @param board The board.
+     * @return A String.
+     */
     public String getStringRepresentationOfABoard(int[][] board) {
         int numberOfColumns = board[0].length;
         StringBuilder builder = new StringBuilder();
@@ -52,6 +78,16 @@ public class Solution {
         return builder.toString();
     }
 
+    /**
+     * Flip the board.
+     * direction == 0 => Do nothing
+     * direction == 1 => Clockwise 90
+     * direction == 2 => Clockwise 180
+     * direction == 3 => Clockwise 270
+     * @param input The input board.
+     * @param direction The direction to flip.
+     * @return The flipped board.
+     */
     public int[][] flip(int[][] input, int direction) {
         int numberOfRows = input.length, numberOfColumns = input[0].length;
         int[][] result = new int[numberOfRows][numberOfColumns];
@@ -69,6 +105,14 @@ public class Solution {
         return result;
     }
 
+    /**
+     * Flip the board.
+     * direction == 0 => Horizontal Flip
+     * direction == 1 => Vertical Flip
+     * @param input The input board.
+     * @param direction The direction to flip.
+     * @return The rotated board.
+     */
     public int[][] rotate(int[][] input, int direction) {
         int numberOfRows = input.length, numberOfColumns = input[0].length;
         int[][] result;
@@ -92,12 +136,49 @@ public class Solution {
             result = new int[numberOfColumns][numberOfRows];
             for (int row = 0; row < numberOfColumns; row++)
                 for (int col = 0; col < numberOfRows; col++)
-                    result[row][col] = input[col][numberOfRows - row - 1];
+                    result[row][col] = input[col][numberOfColumns - row - 1];
         }
 
         return result;
     }
 
+    /**
+     * Search for all possible states,
+     * given rotation and flips.
+     * @param input The input board.
+     * @param visitedStates The visited states.
+     * @param results The results.
+     */
+    public void searchPossibleStates(int[][] input, Set<String> visitedStates, PossibleStateContainer results) {
+        int numberOfRows = input.length, numberOfColumns = input[0].length;
+        if (numberOfRows < numberOfColumns) results.p.add(input);
+        else results.q.add(input);
+
+        // Search for all possible rotations.
+        for (int rotate : POSSIBLE_ROTATES) {
+            int[][] newState = this.rotate(input, rotate);
+            String rep = this.getStringRepresentationOfABoard(newState);
+            if (!visitedStates.contains(rep)) {
+                visitedStates.add(rep);
+                searchPossibleStates(newState, visitedStates, results);
+            }
+        }
+
+        // Search for all possible rotations.
+        for (int flip: POSSIBLE_FLIPS) {
+            int[][] newState = this.flip(input, flip);
+            String rep = this.getStringRepresentationOfABoard(newState);
+            if (!visitedStates.contains(rep)) {
+                visitedStates.add(rep);
+                searchPossibleStates(newState, visitedStates, results);
+            }
+        }
+    }
+
+    /**
+     * Essentially read the input from stdin.
+     * @return An array of test cases.
+     */
     public ArrayList<TestCase> readTestCases() {
         Scanner scanner = new Scanner(System.in);
 
